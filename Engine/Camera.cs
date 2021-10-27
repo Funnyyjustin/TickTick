@@ -8,11 +8,11 @@ namespace Engine
 {
     class Camera : ExtendedGame
     {
-        public Point WindowBox
+        public Rectangle WindowBox
         {
             get
             {
-                Point windowBox = windowSize;
+                Rectangle windowBox = new Rectangle(0, 0, 1024, 768);
                 return windowBox;
             }
         }
