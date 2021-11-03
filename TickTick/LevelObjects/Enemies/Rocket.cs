@@ -38,6 +38,17 @@ class Rocket : AnimatedGameObject
         // go back to the starting position
         LocalPosition = startPosition;
     }
+    public bool IsActive { get; private set; }
+
+    //Rectangle overlap = CollisionDetection.CalculateIntersection();
+
+    //public void Explode()
+    //{
+    //    IsActive = false;
+    //    PlayAnimation("die");
+    //    ExtendedGame.AssetManager.PlaySoundEffect("Sounds/snd_player_explode");
+    //    Reset();
+    //}
 
     public override void Update(GameTime gameTime)
     {
@@ -52,5 +63,8 @@ class Rocket : AnimatedGameObject
         // if the rocket touches the player, the player dies
         if (level.Player.CanCollideWithObjects && HasPixelPreciseCollision(level.Player))
             level.Player.Die();
+        // if the player stands on top of the rocket, the rocket explodes
+        //else if ()
+        //    Explode();
     }
 }
