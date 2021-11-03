@@ -23,7 +23,14 @@ CHANGES
 
 TO ADD
 -----------------------------------------------------------------------------
-- Speed Behavior
+- Sidescrolling
+	- 26.6.1b
+	- 26.6.1c (excl. outside game world)
+	- 26.6.1d (?)
+	- 26.6.1e
+	- 26.6.1f
+- Jumping onto rockets (26.6.2a)
+- Speed Behavior (26.6.2b)
    - Sprites
 	- Fast tiles and pickups (Tile class, surfaceExtension = _fast)
 	- Slow tiles and pickups (Tile class, surfaceExtension = _slow)
