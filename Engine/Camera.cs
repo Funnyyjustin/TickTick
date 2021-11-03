@@ -6,8 +6,13 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace Engine
 {
-    class Camera : ExtendedGame
+    public class Camera : GameObject
     {
+        public float zoom;
+        public Camera() : base()
+        {
+            zoom = 1;
+        }
         public Rectangle WindowBox
         {
             get

@@ -83,7 +83,7 @@ namespace Engine
         /// <summary>
         /// Gets this object's global position in the game world, by adding its local position to the global position of its parent.
         /// </summary>
-        public Vector2 GlobalPosition
+        public virtual Vector2 GlobalPosition
         {
             get
             {

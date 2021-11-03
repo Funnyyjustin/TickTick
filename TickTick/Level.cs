@@ -11,6 +11,7 @@ partial class Level : GameObjectList
     Tile[,] tiles;
     List<WaterDrop> waterDrops;
 
+    public Camera Camera { get; private set; }
     public Player Player { get; private set; }
     public int LevelIndex { get; private set; }
 
@@ -45,7 +46,7 @@ partial class Level : GameObjectList
                 "Sprites/Backgrounds/spr_mountain_" + (ExtendedGame.Random.Next(2) + 1),
                 TickTick.Depth_Background + 0.01f * (float)ExtendedGame.Random.NextDouble());
 
-            mountain.LocalPosition = new Vector2(mountain.Width * (i-1) * 0.4f, 
+            mountain.LocalPosition = new Vector2(mountain.Width * (i - 1) * 0.4f,
                 BoundingBox.Height - mountain.Height);
 
             backgrounds.AddChild(mountain);
@@ -136,6 +137,14 @@ partial class Level : GameObjectList
                 if (drop.Visible)
                     return false;
             return true;
+        }
+    }
+
+    public override Vector2 GlobalPosition
+    {
+        get
+        {
+            return -Camera.GlobalPosition;
         }
     }
 
