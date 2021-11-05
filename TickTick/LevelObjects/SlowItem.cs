@@ -11,7 +11,7 @@ class SlowItem : SpriteGameObject
     Vector2 startPosition;
     private double elapsedTime = 0;
 
-    public SlowItem(Level level, Vector2 startPosition) : base("Sprites/LevelObjects/spr_slowitem", TickTick.Depth_LevelObjects)
+    public SlowItem(Level level, Vector2 startPosition) : base("Sprites/LevelObjects/slowitem", TickTick.Depth_LevelObjects)
     {
         this.level = level;
         this.startPosition = startPosition;

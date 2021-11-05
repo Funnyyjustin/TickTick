@@ -11,7 +11,7 @@ class FastItem : SpriteGameObject
     Vector2 startPosition;
     private double elapsedTime = 0;
 
-    public FastItem(Level level, Vector2 startPosition) : base("Sprites/LevelObjects/spr_fastitem", TickTick.Depth_LevelObjects)
+    public FastItem(Level level, Vector2 startPosition) : base("Sprites/LevelObjects/fastitem", TickTick.Depth_LevelObjects)
     {
         this.level = level;
         this.startPosition = startPosition;

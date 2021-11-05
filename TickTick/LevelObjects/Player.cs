@@ -17,11 +17,12 @@ class Player : AnimatedGameObject
     bool facingLeft; // Whether or not the character is currently looking to the left.
 
     bool isGrounded; // Whether or not the character is currently standing on something.
-    bool standingOnIceTile, standingOnHotTile, standingOnSlowTile, standingOnFastTile; // Whether or not the character is standing on an ice tile, a hot tile or a slow tile.
+    public bool standingOnIceTile, standingOnHotTile, standingOnSlowTile, standingOnFastTile; // Whether or not the character is standing on an ice tile, a hot tile or a slow tile.
     float desiredHorizontalSpeed; // The horizontal speed at which the character would like to move.
 
     Level level;
     Vector2 startPosition;
+    Rocket rocket;
     
     bool isCelebrating; // Whether or not the player is celebrating a level victory.
     bool isExploding;
@@ -31,6 +32,8 @@ class Player : AnimatedGameObject
     public bool CanCollideWithObjects { get { return IsAlive && !isCelebrating; } }
 
     public bool IsMoving { get { return velocity != Vector2.Zero; } }
+
+    public bool standingOnRocket { get; private set; }
 
     public Player(Level level, Vector2 startPosition) : base(TickTick.Depth_LevelPlayer)
     {
@@ -60,7 +63,7 @@ class Player : AnimatedGameObject
         SetOriginToBottomCenter();
         facingLeft = false;
         isGrounded = true;
-        standingOnIceTile = standingOnHotTile = standingOnSlowTile = standingOnFastTile = false;
+        standingOnIceTile = standingOnHotTile = standingOnSlowTile = standingOnFastTile = standingOnRocket = false;
 
         IsAlive = true;
         isExploding = false;
@@ -166,6 +169,9 @@ class Player : AnimatedGameObject
                 walkingSpeed = 600;
             else
                 walkingSpeed = 400;
+
+            if (standingOnRocket)
+                rocket.RocketDie();
         }
             
     }
@@ -205,6 +211,7 @@ class Player : AnimatedGameObject
         standingOnHotTile = false;
         standingOnSlowTile = false;
         standingOnFastTile = false;
+        standingOnRocket = false;
 
         // determine the range of tiles to check
         Rectangle bbox = BoundingBoxForCollisions;
@@ -275,7 +282,7 @@ class Player : AnimatedGameObject
         }
     }
 
-    Rectangle BoundingBoxForCollisions
+    public Rectangle BoundingBoxForCollisions
     {
         get
         {
