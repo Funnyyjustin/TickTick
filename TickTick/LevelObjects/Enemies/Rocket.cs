@@ -19,24 +19,50 @@ class Rocket : AnimatedGameObject
         PlayAnimation("rocket");
         SetOriginToCenter();
 
-        sprite.Mirror = facingLeft;
-        if (sprite.Mirror)
+        if (IsActive)
         {
-            velocity.X = -speed;
-            this.startPosition = startPosition + new Vector2(2*speed, 0);
+            sprite.Mirror = facingLeft;
+            if (sprite.Mirror)
+            {
+                velocity.X = -speed;
+                this.startPosition = startPosition + new Vector2(2 * speed, 0);
+            }
+            else
+            {
+                velocity.X = speed;
+                this.startPosition = startPosition - new Vector2(2 * speed, 0);
+            }
+            Reset();
         }
-        else
-        {
-            velocity.X = speed;
-            this.startPosition = startPosition - new Vector2(2 * speed, 0);
-        }
-        Reset();
     }
 
     public override void Reset()
     {
         // go back to the starting position
         LocalPosition = startPosition;
+        IsActive = true;
+    }
+
+    Rectangle BboxForCollisions
+    {
+        get
+        {
+            Rectangle bboxRocket = BoundingBox;
+            bboxRocket.X += 20;
+            bboxRocket.Width -= 40;
+            bboxRocket.Height -= 1;
+            return bboxRocket;
+        }
+    }
+
+    public bool IsActive { get; private set; }
+
+    public void RocketDie()
+    {
+        IsActive = false;
+        PlayAnimation("die");
+        ExtendedGame.AssetManager.PlaySoundEffect("Sounds/snd_player_explode");
+        Reset();
     }
 
     public override void Update(GameTime gameTime)
@@ -52,5 +78,7 @@ class Rocket : AnimatedGameObject
         // if the rocket touches the player, the player dies
         if (level.Player.CanCollideWithObjects && HasPixelPreciseCollision(level.Player))
             level.Player.Die();
+        if (level.Player.CanCollideWithObjects && CollisionDetection.ShapesIntersect(BboxForCollisions, level.Player.BoundingBoxForCollisions))
+            RocketDie();
     }
 }

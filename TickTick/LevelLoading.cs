@@ -57,8 +57,10 @@ partial class Level : GameObjectList
         // create a parent object for everything
         GameObjectList playingField = new GameObjectList();
 
-        // initialize the list of water drops
+        // initialize the list of water drops and items
         waterDrops = new List<WaterDrop>();
+        fastItems = new List<FastItem>();
+        slowItems = new List<SlowItem>();
 
         // prepare the grid arrays
         tiles = new Tile[gridWidth, gridHeight];
@@ -105,6 +107,10 @@ partial class Level : GameObjectList
             LoadSparkyEnemy(x, y);
         else if (symbol == 'A' || symbol == 'B' || symbol == 'C')
             LoadFlameEnemy(x, y, symbol);
+        else if (symbol == 'F')
+            LoadFastItem(x, y);
+        else if (symbol == 'E')
+            LoadSlowItem(x, y);
     }
 
     Tile CharToStaticTile(char symbol)
@@ -123,6 +129,14 @@ partial class Level : GameObjectList
                 return new Tile(Tile.Type.Platform, Tile.SurfaceType.Ice);
             case 'I':
                 return new Tile(Tile.Type.Wall, Tile.SurfaceType.Ice);
+            case 'l':
+                return new Tile(Tile.Type.Platform, Tile.SurfaceType.Slow);
+            case 'L':
+                return new Tile(Tile.Type.Wall, Tile.SurfaceType.Slow);
+            case 'b':
+                return new Tile(Tile.Type.Platform, Tile.SurfaceType.Fast);
+            case 'B':
+                return new Tile(Tile.Type.Wall, Tile.SurfaceType.Fast);
             default:
                 return new Tile(Tile.Type.Empty, Tile.SurfaceType.Normal);
         }
@@ -188,6 +202,26 @@ partial class Level : GameObjectList
             enemy = new UnpredictableEnemy(this, pos);
 
         AddChild(enemy);
+    }
+    void LoadFastItem(int x, int y)
+    {
+        // create the item object;  place it around the center of the tile
+        Vector2 pos = GetCellPosition(x, y) + new Vector2(TileWidth / 2, TileHeight / 3);
+        FastItem f = new FastItem(this, pos);
+        // add it to the game world
+        AddChild(f);
+        // store an extra reference to it
+        fastItems.Add(f);
+    }
+    void LoadSlowItem(int x, int y)
+    {
+        // create the item object;  place it around the center of the tile
+        Vector2 pos = GetCellPosition(x, y) + new Vector2(TileWidth / 2, TileHeight / 3);
+        SlowItem s = new SlowItem(this, pos);
+        // add it to the game world
+        AddChild(s);
+        // store an extra reference to it
+        slowItems.Add(s);
     }
 
     Vector2 GetCellBottomCenter(int x, int y)

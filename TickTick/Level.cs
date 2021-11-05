@@ -10,6 +10,8 @@ partial class Level : GameObjectList
 
     Tile[,] tiles;
     List<WaterDrop> waterDrops;
+    List<FastItem> fastItems;
+    List<SlowItem> slowItems;
 
     public Camera Camera { get; private set; }
     public Player Player { get; private set; }

@@ -5,7 +5,7 @@ using System;
 
 class Player : AnimatedGameObject
 {
-    const float walkingSpeed = 400; // Standard walking speed, in game units per second.
+    public float walkingSpeed = 400; // Standard walking speed, in game units per second.
     const float jumpSpeed = 900; // Lift-off speed when the character jumps.
     const float gravity = 2300; // Strength of the gravity force that pulls the character down.
     const float maxFallSpeed = 1200; // The maximum vertical speed at which the character can fall.
@@ -17,11 +17,12 @@ class Player : AnimatedGameObject
     bool facingLeft; // Whether or not the character is currently looking to the left.
 
     bool isGrounded; // Whether or not the character is currently standing on something.
-    bool standingOnIceTile, standingOnHotTile; // Whether or not the character is standing on an ice tile or a hot tile.
+    public bool standingOnIceTile, standingOnHotTile, standingOnSlowTile, standingOnFastTile; // Whether or not the character is standing on an ice tile, a hot tile or a slow tile.
     float desiredHorizontalSpeed; // The horizontal speed at which the character would like to move.
 
     Level level;
     Vector2 startPosition;
+    Rocket rocket;
     
     bool isCelebrating; // Whether or not the player is celebrating a level victory.
     bool isExploding;
@@ -31,6 +32,8 @@ class Player : AnimatedGameObject
     public bool CanCollideWithObjects { get { return IsAlive && !isCelebrating; } }
 
     public bool IsMoving { get { return velocity != Vector2.Zero; } }
+
+    public bool standingOnRocket { get; private set; }
 
     public Player(Level level, Vector2 startPosition) : base(TickTick.Depth_LevelPlayer)
     {
@@ -60,7 +63,7 @@ class Player : AnimatedGameObject
         SetOriginToBottomCenter();
         facingLeft = false;
         isGrounded = true;
-        standingOnIceTile = standingOnHotTile = false;
+        standingOnIceTile = standingOnHotTile = standingOnSlowTile = standingOnFastTile = standingOnRocket = false;
 
         IsAlive = true;
         isExploding = false;
@@ -159,6 +162,16 @@ class Player : AnimatedGameObject
                 level.Timer.Multiplier = 2;
             else
                 level.Timer.Multiplier = 1;
+
+            if (standingOnSlowTile)
+                walkingSpeed = 200;
+            else if (standingOnFastTile)
+                walkingSpeed = 600;
+            else
+                walkingSpeed = 400;
+
+            if (standingOnRocket)
+                rocket.RocketDie();
         }
             
     }
@@ -196,6 +209,9 @@ class Player : AnimatedGameObject
         isGrounded = false;
         standingOnIceTile = false;
         standingOnHotTile = false;
+        standingOnSlowTile = false;
+        standingOnFastTile = false;
+        standingOnRocket = false;
 
         // determine the range of tiles to check
         Rectangle bbox = BoundingBoxForCollisions;
@@ -251,6 +267,10 @@ class Player : AnimatedGameObject
                             standingOnHotTile = true;
                         else if (surface == Tile.SurfaceType.Ice)
                             standingOnIceTile = true;
+                        else if (surface == Tile.SurfaceType.Slow)
+                            standingOnSlowTile = true;
+                        else if (surface == Tile.SurfaceType.Fast)
+                            standingOnFastTile = true;
                     }
                     else if (velocity.Y <= 0 && bbox.Center.Y > tileBounds.Bottom && overlap.Height > 2) // ceiling
                     {
@@ -262,7 +282,7 @@ class Player : AnimatedGameObject
         }
     }
 
-    Rectangle BoundingBoxForCollisions
+    public Rectangle BoundingBoxForCollisions
     {
         get
         {
