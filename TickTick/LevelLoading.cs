@@ -40,13 +40,13 @@ partial class Level : GameObjectList
     void AddLevelInfoObjects(string description)
     {
         // - background box
-        SpriteGameObject frame = new SpriteGameObject("Sprites/UI/spr_frame_hint", TickTick.Depth_UIBackground);
+        SpriteGameObject frame = new SpriteGameObject("Sprites/UI/spr_frame_hint", TickTick.Depth_UIBackground, "UI");
         frame.SetOriginToCenter();
         frame.LocalPosition = new Vector2(720, 50);
         AddChild(frame);
 
         // - text
-        TextGameObject hintText = new TextGameObject("Fonts/HintFont", TickTick.Depth_UIForeground, Color.Black, TextGameObject.Alignment.Left);
+        TextGameObject hintText = new TextGameObject("Fonts/HintFont", TickTick.Depth_UIForeground, Color.Black, "UI", TextGameObject.Alignment.Left);
         hintText.Text = description;
         hintText.LocalPosition = new Vector2(510, 40);
         AddChild(hintText);
@@ -222,6 +222,13 @@ partial class Level : GameObjectList
         AddChild(s);
         // store an extra reference to it
         slowItems.Add(s);
+    }
+
+    void LoadCamera(){
+        // initializes a camera that can move around the level, and set the camera position the player's position.
+        Camera followingCamera = new FollowingCamera(new Point(1440, 825), BoundingBox, Player, Vector2.Zero);
+        followingCamera.Reset();
+        TickTick.Game.Camera = followingCamera;
     }
 
     Vector2 GetCellBottomCenter(int x, int y)

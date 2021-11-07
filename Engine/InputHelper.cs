@@ -50,6 +50,14 @@ namespace Engine
         }
 
         /// <summary>
+        /// Gets the current position of the mouse in world coordinates.
+        /// </summary>
+        public Vector2 MousePositionCamera
+        {
+            get { return game.ScreenToWorld(MousePositionScreen) - game.Camera.GlobalPosition; }
+        }
+
+        /// <summary>
         /// Checks and returns whether the player has started pressing the left mouse button in the last frame of the game loop.
         /// </summary>
         /// <returns>true if the left mouse button is now pressed and was not yet pressed in the previous frame; false otherwise.</returns>

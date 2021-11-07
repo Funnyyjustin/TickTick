@@ -7,7 +7,7 @@ class LevelButton : Engine.UI.LevelButton
         : base(levelIndex, startStatus)
     {
         // add a label that shows the level index
-        label = new TextGameObject("Fonts/MainFont", 1, Color.White, TextGameObject.Alignment.Right);
+        label = new TextGameObject("Fonts/MainFont", 1, Color.White, "UI", TextGameObject.Alignment.Right);
         label.LocalPosition = new Vector2(sprite.Width - 15, 10);
         label.Parent = this;
         label.Text = levelIndex.ToString();

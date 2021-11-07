@@ -11,12 +11,20 @@ class TickTick : ExtendedGameWithLevels
     public const float Depth_LevelObjects = 0.6f; // for all game objects except the player
     public const float Depth_LevelPlayer = 0.7f; // for the player
 
+    public static TickTick Game {
+        get{
+            if(instance == null){
+                instance = new TickTick();
+            }
+            return instance;
+        }
+    }
+    private static TickTick instance;
 
     [STAThread]
     static void Main()
     {
-        TickTick game = new TickTick();
-        game.Run();
+        Game.Run();
     }
 
     public TickTick()
@@ -29,7 +37,7 @@ class TickTick : ExtendedGameWithLevels
         base.LoadContent();
 
         // set a custom world and window size
-        worldSize = new Point(1440, 825);
+        WorldSize = new Point(1440, 825);
         windowSize = new Point(1024, 586);
         
         // to let these settings take effect, we need to set the FullScreen property again

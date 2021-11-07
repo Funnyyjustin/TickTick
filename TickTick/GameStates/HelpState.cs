@@ -8,6 +8,10 @@ class HelpState : GameState
 
     public HelpState()
     {
+        // initializes a camera
+        Camera camera = new Camera(new Point(1440, 825), Rectangle.Empty);
+        TickTick.Game.Camera = camera;
+
         // add a background
         gameObjects.AddChild(new SpriteGameObject("Sprites/Backgrounds/spr_help", 1));
 
@@ -22,5 +26,12 @@ class HelpState : GameState
         base.HandleInput(inputHelper);
         if (backButton.Pressed)
             ExtendedGame.GameStateManager.SwitchTo(ExtendedGameWithLevels.StateName_Title);
+    }
+
+    public override void Initialize()
+    {
+        // initializes a camera
+        Camera camera = new Camera(new Point(1440, 825), Rectangle.Empty);
+        TickTick.Game.Camera = camera;
     }
 }

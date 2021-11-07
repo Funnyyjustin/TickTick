@@ -15,7 +15,7 @@
         /// </summary>
         /// <param name="assetName">The name of the sprite to use.</param>
         /// <param name="depth">The depth at which the button should be drawn.</param>
-        public Button(string assetName, float depth) : base(assetName, depth)
+        public Button(string assetName, float depth, string drawBatch = "UI") : base(assetName, depth, drawBatch)
         {
             Pressed = false;
         }
@@ -23,7 +23,7 @@
         public override void HandleInput(InputHelper inputHelper)
         {
             Pressed = Visible && inputHelper.MouseLeftButtonPressed()
-                && BoundingBox.Contains(inputHelper.MousePositionWorld);
+                && BoundingBox.Contains(inputHelper.MousePositionCamera);
         }
 
         public override void Reset()

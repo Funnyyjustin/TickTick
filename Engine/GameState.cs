@@ -1,5 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using System;
 
 namespace Engine
 {
@@ -56,5 +57,7 @@ namespace Engine
         {
             gameObjects.Reset();
         }
+
+        public abstract void Initialize();
     }
 }

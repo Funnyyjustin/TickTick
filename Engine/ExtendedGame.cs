@@ -17,12 +17,29 @@ namespace Engine
         /// <summary>
         /// The width and height of the game world, in game units.
         /// </summary>
-        protected Point worldSize;
+        public Point WorldSize { get; set; }
 
         /// <summary>
         /// The width and height of the window, in pixels.
         /// </summary>
         protected Point windowSize;
+
+        private Camera camera;
+        public Camera Camera
+        {
+            get
+            {
+                if (camera == null)
+                {
+                    return new Camera(WorldSize, Rectangle.Empty);
+                }
+                return camera;
+            }
+            set
+            {
+                camera = value;
+            }
+        }
 
         /// <summary>
         /// A matrix used for scaling the game world so that it fits inside the window.
@@ -60,8 +77,8 @@ namespace Engine
             Random = new Random();
 
             // default window and world size
-            windowSize = new Point(1024, 768);
-            worldSize = new Point(1024, 768);
+            WorldSize = new Point(1440, 825);
+            windowSize = new Point(1024, 586);
         }
 
         /// <summary>
@@ -89,6 +106,8 @@ namespace Engine
         protected override void Update(GameTime gameTime)
         {
             HandleInput();
+            Camera.Update(gameTime);
+            FullScreen = FullScreen;
             GameStateManager.Update(gameTime);
         }
 
@@ -118,12 +137,20 @@ namespace Engine
         {
             GraphicsDevice.Clear(Color.Black);
 
-            // start drawing sprites, applying the scaling matrix
-            spriteBatch.Begin(SpriteSortMode.FrontToBack, null, null, null, null, null, spriteScale);
-
+            // calculate how the graphics should be scaled, so that the game world fits inside the window
+            spriteScale = Matrix.CreateScale((float)GraphicsDevice.Viewport.Width / Camera.CameraViewPortSize.X, (float)GraphicsDevice.Viewport.Height / Camera.CameraViewPortSize.Y, 1);
+            // start drawing sprites, applying the scaling and translation matrix
+            Matrix transform = Camera.TranslationMatrix * spriteScale;
+            spriteBatch.Begin(SpriteSortMode.FrontToBack, null, null, null, null, null, transform);
+            spriteBatch.Name = "Default";
             // let the game world draw itself
             GameStateManager.Draw(gameTime, spriteBatch);
+            spriteBatch.End();
 
+            spriteBatch.Begin(SpriteSortMode.FrontToBack, null, null, null, null, null, spriteScale);
+            spriteBatch.Name = "UI";
+            // let the UI draw itself
+            GameStateManager.Draw(gameTime, spriteBatch);
             spriteBatch.End();
         }
 
@@ -151,8 +178,6 @@ namespace Engine
             // calculate and set the viewport to use
             GraphicsDevice.Viewport = CalculateViewport(screenSize);
 
-            // calculate how the graphics should be scaled, so that the game world fits inside the window
-            spriteScale = Matrix.CreateScale((float)GraphicsDevice.Viewport.Width / worldSize.X, (float)GraphicsDevice.Viewport.Height / worldSize.Y, 1);
         }
 
         /// <summary>
@@ -166,7 +191,7 @@ namespace Engine
             Viewport viewport = new Viewport();
 
             // calculate the two aspect ratios
-            float gameAspectRatio = (float)worldSize.X / worldSize.Y;
+            float gameAspectRatio = (float)Camera.CameraViewPortSize.X / Camera.CameraViewPortSize.Y;
             float windowAspectRatio = (float)windowSize.X / windowSize.Y;
 
             // if the window is relatively wide, use the full window height
@@ -192,7 +217,7 @@ namespace Engine
         /// <summary>
         /// Gets or sets whether the game is running in full-screen mode.
         /// </summary>
-        protected bool FullScreen
+        public bool FullScreen
         {
             get { return graphics.IsFullScreen; }
             set { ApplyResolutionSettings(value); }
@@ -206,8 +231,8 @@ namespace Engine
         public Vector2 ScreenToWorld(Vector2 screenPosition)
         {
             Vector2 viewportTopLeft = new Vector2(GraphicsDevice.Viewport.X, GraphicsDevice.Viewport.Y);
-            float screenToWorldScale = worldSize.X / (float)GraphicsDevice.Viewport.Width;
-            return (screenPosition - viewportTopLeft) * screenToWorldScale;
+            float screenToWorldScale = Camera.CameraViewPortSize.X / (float)GraphicsDevice.Viewport.Width;
+            return (screenPosition - viewportTopLeft) * screenToWorldScale + Camera.GlobalPosition;
         }
     }
 }

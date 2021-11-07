@@ -54,7 +54,10 @@ namespace Engine
         public void SwitchTo(string name)
         {
             if (gameStates.ContainsKey(name))
+            {
                 currentGameState = gameStates[name];
+                currentGameState.Initialize();
+            }
         }
 
         /// <summary>

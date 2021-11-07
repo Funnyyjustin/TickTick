@@ -13,6 +13,8 @@ namespace Engine
         /// </summary>
         protected SpriteSheet sprite;
 
+        public string DrawBatch { get; set; }
+
         /// <summary>
         /// The origin ('offset') to use when drawing the sprite on the screen.
         /// </summary>
@@ -39,9 +41,10 @@ namespace Engine
         /// <param name="spriteName">The name of the sprite to load.</param>
         /// <param name="depth">The depth at which the object should be drawn.</param>
         /// <param name="sheetIndex">The sheet index of the sprite to use initially.</param>
-        public SpriteGameObject(string spriteName, float depth, int sheetIndex = 0)
+        public SpriteGameObject(string spriteName, float depth, string drawBatch = "Default", int sheetIndex = 0)
         {
             this.depth = depth;
+            DrawBatch = drawBatch;
 
             if (spriteName != null)
                 sprite = new SpriteSheet(spriteName, depth, sheetIndex);
@@ -57,6 +60,9 @@ namespace Engine
         public override void Draw(GameTime gameTime, SpriteBatch spriteBatch)
         {
             if (!Visible)
+                return;
+
+            if (spriteBatch.Name != DrawBatch)
                 return;
 
             // draw the sprite at its *global* position in the game world

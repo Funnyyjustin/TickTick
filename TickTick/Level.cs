@@ -13,7 +13,6 @@ partial class Level : GameObjectList
     List<FastItem> fastItems;
     List<SlowItem> slowItems;
 
-    public Camera Camera { get; private set; }
     public Player Player { get; private set; }
     public int LevelIndex { get; private set; }
 
@@ -36,6 +35,9 @@ partial class Level : GameObjectList
 
         // load the rest of the level
         LoadLevelFromFile(filename);
+
+        // initialize camera
+        LoadCamera();
 
         // add the timer
         timer = new BombTimer();
@@ -139,14 +141,6 @@ partial class Level : GameObjectList
                 if (drop.Visible)
                     return false;
             return true;
-        }
-    }
-
-    public override Vector2 GlobalPosition
-    {
-        get
-        {
-            return -Camera.GlobalPosition;
         }
     }
 

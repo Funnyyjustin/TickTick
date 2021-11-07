@@ -6,7 +6,6 @@ using Engine;
 class SlowItem : SpriteGameObject
     {
     Level level;
-    Player player;
     protected float bounce;
     Vector2 startPosition;
     private double elapsedTime = 0;
@@ -33,13 +32,13 @@ class SlowItem : SpriteGameObject
         if (Visible && level.Player.CanCollideWithObjects && HasPixelPreciseCollision(level.Player))
         {
             Visible = false;
-            ExtendedGame.AssetManager.PlaySoundEffect("Sounds/snd_itemcollected");
+            ExtendedGame.AssetManager.PlaySoundEffect("Sounds/snd_watercollected");
 
             elapsedTime += gameTime.ElapsedGameTime.TotalMilliseconds;
             if (elapsedTime < 500)
-                player.walkingSpeed = 200;
+                level.Player.walkingSpeed = 200;
             else if (elapsedTime > 500)
-                player.walkingSpeed = 400;
+                level.Player.walkingSpeed = 400;
         }
 
     }

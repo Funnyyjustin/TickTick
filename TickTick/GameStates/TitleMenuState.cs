@@ -31,4 +31,11 @@ class TitleMenuState : GameState
         else if (helpButton.Pressed)
             ExtendedGame.GameStateManager.SwitchTo(ExtendedGameWithLevels.StateName_Help);
     }
+
+    public override void Initialize()
+    {
+        // initializes a camera
+        Camera camera = new Camera(new Point(1440, 825), Rectangle.Empty);
+        TickTick.Game.Camera = camera;
+    }
 }

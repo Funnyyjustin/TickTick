@@ -29,6 +29,8 @@ namespace Engine
         /// </summary>
         protected float depth;
 
+        public string DrawBatch { get; set; }
+
         /// <summary>
         /// An enum that describes the different ways in which a text can be aligned horizontally.
         /// </summary>
@@ -52,12 +54,13 @@ namespace Engine
         /// <param name="color">The color with which the text should be drawn.</param>
         /// <param name="alignment">The horizontal alignment to use.</param>
 
-        public TextGameObject(string fontName, float depth, Color color, Alignment alignment = Alignment.Left)
+        public TextGameObject(string fontName, float depth, Color color, string drawBatch = "UI", Alignment alignment = Alignment.Left)
         {
             font = ExtendedGame.AssetManager.LoadFont(fontName);
             Color = color;
             this.depth = depth;
             this.alignment = alignment;
+            DrawBatch = drawBatch;
 
             Text = "";
         }
@@ -72,6 +75,8 @@ namespace Engine
             if (!Visible)
                 return;
 
+            if (spriteBatch.Name != DrawBatch)
+                return;
             // calculate the origin
             Vector2 origin = new Vector2(OriginX, 0);
 

@@ -13,7 +13,7 @@ class PlayingState : GameState, IPlayingState
     public PlayingState()
     {
         // add a "quit" button
-        quitButton = new Button("Sprites/UI/spr_button_quit", 1);
+        quitButton = new Button("Sprites/UI/spr_button_quit", 1, "UI");
         quitButton.LocalPosition = new Vector2(1290, 20);
         gameObjects.AddChild(quitButton);
 
@@ -24,7 +24,7 @@ class PlayingState : GameState, IPlayingState
 
     SpriteGameObject AddOverlay(string spriteName)
     {
-        SpriteGameObject result = new SpriteGameObject(spriteName, 1);
+        SpriteGameObject result = new SpriteGameObject(spriteName, 1, "UI");
         result.SetOriginToCenter();
         result.LocalPosition = new Vector2(720, 412);
         gameObjects.AddChild(result);
@@ -100,4 +100,6 @@ class PlayingState : GameState, IPlayingState
         // mark the level as solved, and unlock the next level
         ExtendedGameWithLevels.MarkLevelAsSolved(levelIndex);
     }
+
+    public override void Initialize(){}
 }

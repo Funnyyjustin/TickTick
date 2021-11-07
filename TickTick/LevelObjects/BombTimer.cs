@@ -18,11 +18,11 @@ class BombTimer : GameObjectList
         localPosition = new Vector2(20, 20);
         
         // add a background image
-        SpriteGameObject background = new SpriteGameObject("Sprites/UI/spr_timer", TickTick.Depth_UIBackground);
+        SpriteGameObject background = new SpriteGameObject("Sprites/UI/spr_timer", TickTick.Depth_UIBackground, "UI");
         AddChild(background);
 
         // add a text
-        label = new TextGameObject("Fonts/MainFont", TickTick.Depth_UIForeground, Color.Yellow, TextGameObject.Alignment.Center);
+        label = new TextGameObject("Fonts/MainFont", TickTick.Depth_UIForeground, Color.Yellow, "UI", TextGameObject.Alignment.Center);
         label.LocalPosition = new Vector2(50,25);
         AddChild(label);
 

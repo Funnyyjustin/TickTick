@@ -8,11 +8,19 @@ namespace Engine
 {
     public class Camera : GameObject
     {
-        public Point CameraViewPortSize { get; set; } = new Point(1440, 825);
+        public Point CameraViewPortSize { get; set; }
         public Rectangle CameraLimits { get; set; }
+        public Matrix TranslationMatrix { get; private set; }
 
-        //Overwrites the LocalPosition property, so it sets the LocalPosition clamped to the CameraLimits Rectangle
-        public override Vector2 LocalPosition
+        public Camera(Point cameraViewPortSize, Rectangle cameraLimits)
+        {
+            CameraViewPortSize = cameraViewPortSize;
+            CameraLimits = cameraLimits;
+            TranslationMatrix = Matrix.Identity;
+    }
+
+    //Overwrites the LocalPosition property, so it sets the LocalPosition clamped to the CameraLimits Rectangle
+    public override Vector2 LocalPosition
         {
             get { return localPosition; }
             set
@@ -26,6 +34,8 @@ namespace Engine
                     Math.Clamp(value.X, CameraLimits.Left, rightLimit),
                     Math.Clamp(value.Y, CameraLimits.Top, bottomLimit)
                     );
+
+                TranslationMatrix = Matrix.CreateTranslation(-GlobalPosition.X, -GlobalPosition.Y, 0);
             }
         }
     }
