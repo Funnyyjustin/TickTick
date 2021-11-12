@@ -1,5 +1,7 @@
 ﻿using Engine;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Input;
+using System;
 
 /// <summary>
 /// Represents a rocket enemy that flies horizontally through the screen.
@@ -16,6 +18,8 @@ class Rocket : AnimatedGameObject
         this.level = level;
 
         LoadAnimation("Sprites/LevelObjects/Rocket/spr_rocket@3", "rocket", true, 0.1f);
+        LoadAnimation("Sprites/LevelObjects/Player/spr_die@5", "die", true, 0.1f);
+        LoadAnimation("Sprites/LevelObjects/Player/spr_explode@5x5", "explode", false, 0.04f);
         PlayAnimation("rocket");
         SetOriginToCenter();
 
@@ -48,19 +52,20 @@ class Rocket : AnimatedGameObject
         get
         {
             Rectangle bboxRocket = BoundingBox;
-            bboxRocket.X += 20;
-            bboxRocket.Width -= 40;
+            bboxRocket.X += 50;
+            bboxRocket.Y -= 25;
+            bboxRocket.Width -= 50;
             bboxRocket.Height -= 1;
             return bboxRocket;
         }
     }
 
-    public bool IsActive { get; private set; }
+    public bool IsActive { get; private set; } = true;
 
     public void RocketDie()
     {
         IsActive = false;
-        PlayAnimation("die");
+        PlayAnimation("explode");
         ExtendedGame.AssetManager.PlaySoundEffect("Sounds/snd_player_explode");
         Reset();
     }

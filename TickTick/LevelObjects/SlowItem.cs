@@ -8,7 +8,9 @@ class SlowItem : SpriteGameObject
     Level level;
     protected float bounce;
     Vector2 startPosition;
-    private double elapsedTime = 0;
+    private float elapsedTime = 0;
+    private float duration = 5000f;
+    private bool pickUp;
 
     public SlowItem(Level level, Vector2 startPosition) : base("Sprites/LevelObjects/slowitem", TickTick.Depth_LevelObjects)
     {
@@ -27,18 +29,24 @@ class SlowItem : SpriteGameObject
         double t = gameTime.TotalGameTime.TotalSeconds * 3.0f + LocalPosition.X;
         bounce = (float)Math.Sin(t) * 0.2f;
         localPosition.Y += bounce;
+        elapsedTime += (float)gameTime.ElapsedGameTime.TotalMilliseconds;
 
         // check if the player collects this item
         if (Visible && level.Player.CanCollideWithObjects && HasPixelPreciseCollision(level.Player))
         {
             Visible = false;
+            elapsedTime = 0;
             ExtendedGame.AssetManager.PlaySoundEffect("Sounds/snd_watercollected");
+            pickUp = true;
+        }
 
-            elapsedTime += gameTime.ElapsedGameTime.TotalMilliseconds;
-            if (elapsedTime < 500)
-                level.Player.walkingSpeed = 200;
-            else if (elapsedTime > 500)
-                level.Player.walkingSpeed = 400;
+        if (pickUp)
+        {
+            level.Player.walkingSpeed = 200;
+            if (elapsedTime > duration)
+            {
+                pickUp = false;
+            }
         }
 
     }
