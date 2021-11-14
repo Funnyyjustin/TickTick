@@ -49,6 +49,7 @@ class Rocket : AnimatedGameObject
         SetOriginToCenter();
     }
 
+    //Create a bounding box that checks collision with player, to check whether the player is stepping on the rocket
     Rectangle BboxForCollisions
     {
         get
