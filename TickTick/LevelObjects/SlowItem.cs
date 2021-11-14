@@ -10,7 +10,6 @@ class SlowItem : SpriteGameObject
     Vector2 startPosition;
     private float elapsedTime = 0;
     private float duration = 5000f;
-    private bool pickUp;
 
     public SlowItem(Level level, Vector2 startPosition) : base("Sprites/LevelObjects/slowitem", TickTick.Depth_LevelObjects)
     {
@@ -20,6 +19,17 @@ class SlowItem : SpriteGameObject
         SetOriginToCenter();
 
         Reset();
+    }
+
+    public bool pickUp
+    {
+        get { return pickUp = true; }
+        set
+        {
+            level.Player.walkingSpeed = level.Player.normalWalkingSpeed / 2;
+            if (elapsedTime > duration)
+                pickUp = false;
+        }
     }
 
     public override void Update(GameTime gameTime)
@@ -39,16 +49,6 @@ class SlowItem : SpriteGameObject
             ExtendedGame.AssetManager.PlaySoundEffect("Sounds/snd_watercollected");
             pickUp = true;
         }
-
-        if (pickUp)
-        {
-            level.Player.walkingSpeed = 200;
-            if (elapsedTime > duration)
-            {
-                pickUp = false;
-            }
-        }
-
     }
 
     public override void Reset()

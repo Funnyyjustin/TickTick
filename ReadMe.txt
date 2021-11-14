@@ -13,7 +13,7 @@ CHANGES
 	- Added a method that gives the Rocket object a BoundingBox.
 	- Added a method that makes the Rocket 'explode'.
 	- Extended the Update method, so it now checks whether the Rocket BB collides with the Player BB.
-	- When a player jumps onto the rocket, the rocket will now explode and reset
+	- When a player jumps onto the rocket, the rocket will now explode and not respawn until the player has completed the level.
 
 
 - Speed Behavior
@@ -34,14 +34,8 @@ TODO
 	- 26.6.1e
 	- 26.6.1f
 
-- Jumping onto rockets (26.6.2a)
-	- Testing (more watertight boundingbox of rocket sprite)
-
 - Speed Behavior (26.6.2b)
 	- Sprites
 		- Fast tiles and items (Tile class, surfaceExtension = _fast AND FastItem class)
 		- Slow tiles and items (Tile class, surfaceExtension = _slow AND SlowItem class)
 		(NOTE): added placeholder sprites for now
-	- Sound
-		- ItemCollected (Item classes)
-	- Placing the tiles and items throughout various levels (level 4 and higher (level 1 to test playability))

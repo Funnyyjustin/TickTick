@@ -11,6 +11,7 @@ class Rocket : AnimatedGameObject
     Level level;
     Vector2 startPosition;
     const float speed = 500;
+    bool collision;
 
     public Rocket(Level level, Vector2 startPosition, bool facingLeft) 
         : base(TickTick.Depth_LevelObjects)
@@ -45,6 +46,7 @@ class Rocket : AnimatedGameObject
         // go back to the starting position
         LocalPosition = startPosition;
         IsActive = true;
+        collision = true;
     }
 
     Rectangle BboxForCollisions
@@ -52,9 +54,9 @@ class Rocket : AnimatedGameObject
         get
         {
             Rectangle bboxRocket = BoundingBox;
-            bboxRocket.X += 50;
-            bboxRocket.Y -= 25;
-            bboxRocket.Width -= 50;
+            bboxRocket.X += 35;
+            bboxRocket.Y -= 15;
+            bboxRocket.Width -= 30;
             bboxRocket.Height -= 1;
             return bboxRocket;
         }
@@ -65,9 +67,10 @@ class Rocket : AnimatedGameObject
     public void RocketDie()
     {
         IsActive = false;
+        collision = false;
+        velocity.X = 0;
         PlayAnimation("explode");
         ExtendedGame.AssetManager.PlaySoundEffect("Sounds/snd_player_explode");
-        Reset();
     }
 
     public override void Update(GameTime gameTime)
@@ -81,8 +84,11 @@ class Rocket : AnimatedGameObject
             Reset();
 
         // if the rocket touches the player, the player dies
-        if (level.Player.CanCollideWithObjects && HasPixelPreciseCollision(level.Player))
-            level.Player.Die();
+        if (collision)
+        {
+            if (level.Player.CanCollideWithObjects && HasPixelPreciseCollision(level.Player))
+                level.Player.Die();
+        }
         if (level.Player.CanCollideWithObjects && CollisionDetection.ShapesIntersect(BboxForCollisions, level.Player.BoundingBoxForCollisions))
             RocketDie();
     }

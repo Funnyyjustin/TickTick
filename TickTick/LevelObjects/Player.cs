@@ -6,6 +6,7 @@ using System;
 class Player : AnimatedGameObject
 {
     public float walkingSpeed = 400; // Standard walking speed, in game units per second.
+    public float normalWalkingSpeed = 400;
     const float jumpSpeed = 900; // Lift-off speed when the character jumps.
     const float gravity = 2300; // Strength of the gravity force that pulls the character down.
     const float maxFallSpeed = 1200; // The maximum vertical speed at which the character can fall.
@@ -22,18 +23,18 @@ class Player : AnimatedGameObject
 
     Level level;
     Vector2 startPosition;
-    Rocket rocket;
+    FastItem fastItem;
+    SlowItem slowItem;
     
     bool isCelebrating; // Whether or not the player is celebrating a level victory.
     bool isExploding;
+    bool onCharacter;
 
     public bool IsAlive { get; private set; }
 
     public bool CanCollideWithObjects { get { return IsAlive && !isCelebrating; } }
 
     public bool IsMoving { get { return velocity != Vector2.Zero; } }
-
-    public bool standingOnRocket { get; private set; }
 
     public Player(Level level, Vector2 startPosition) : base(TickTick.Depth_LevelPlayer)
     {
@@ -56,6 +57,7 @@ class Player : AnimatedGameObject
         // go back to the starting position
         localPosition = startPosition;
         velocity = Vector2.Zero;
+        walkingSpeed = normalWalkingSpeed;
         desiredHorizontalSpeed = 0;
 
         // start with the idle sprite
@@ -63,7 +65,7 @@ class Player : AnimatedGameObject
         SetOriginToBottomCenter();
         facingLeft = false;
         isGrounded = true;
-        standingOnIceTile = standingOnHotTile = standingOnSlowTile = standingOnFastTile = standingOnRocket = false;
+        standingOnIceTile = standingOnHotTile = standingOnSlowTile = standingOnFastTile = false;
 
         IsAlive = true;
         isExploding = false;
@@ -98,6 +100,16 @@ class Player : AnimatedGameObject
             if (isGrounded)
                 PlayAnimation("idle");
         }
+
+        Rectangle playerBox = BoundingBoxForCollisions;
+
+        if (playerBox.Contains(inputHelper.MousePositionWorld))
+            onCharacter = true;
+        else
+            onCharacter = false;
+
+        if (inputHelper.MouseLeftButtonPressed() && inputHelper.MouseLeftButtonDown() && onCharacter)
+            EasterEgg();
 
         // spacebar: jump
         if (isGrounded && inputHelper.KeyPressed(Keys.Space))
@@ -163,15 +175,10 @@ class Player : AnimatedGameObject
             else
                 level.Timer.Multiplier = 1;
 
-            if (standingOnSlowTile)
-                walkingSpeed = 200;
-            else if (standingOnFastTile)
-                walkingSpeed = 600;
-            else
-                walkingSpeed = 400;
-
-            if (standingOnRocket)
-                rocket.RocketDie();
+            if (standingOnSlowTile || ((slowItem != null) && slowItem.pickUp))
+                walkingSpeed = normalWalkingSpeed / 2;
+            else if (standingOnFastTile || ((fastItem != null) && fastItem.pickUp))
+                walkingSpeed = normalWalkingSpeed * 2;
         }
             
     }
@@ -211,7 +218,6 @@ class Player : AnimatedGameObject
         standingOnHotTile = false;
         standingOnSlowTile = false;
         standingOnFastTile = false;
-        standingOnRocket = false;
 
         // determine the range of tiles to check
         Rectangle bbox = BoundingBoxForCollisions;
@@ -328,5 +334,10 @@ class Player : AnimatedGameObject
 
         // stop moving
         velocity = Vector2.Zero;
+    }
+
+    public void EasterEgg()
+    {
+        ExtendedGame.AssetManager.PlaySoundEffect("Sounds/snd_player_easteregg");
     }
 }

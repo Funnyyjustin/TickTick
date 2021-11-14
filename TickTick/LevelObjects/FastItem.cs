@@ -10,7 +10,6 @@ class FastItem : SpriteGameObject
     Vector2 startPosition;
     private float elapsedTime = 0;
     private float duration = 5000f;
-    private bool pickUp;
 
     public FastItem(Level level, Vector2 startPosition) : base("Sprites/LevelObjects/fastitem", TickTick.Depth_LevelObjects)
     {
@@ -20,6 +19,17 @@ class FastItem : SpriteGameObject
         SetOriginToCenter();
 
         Reset();
+    }
+
+    public bool pickUp
+    {
+        get { return pickUp = true; }
+        set
+        {
+            level.Player.walkingSpeed = level.Player.normalWalkingSpeed * 2;
+            if (elapsedTime > duration)
+                pickUp = false;
+        }
     }
 
     public override void Update(GameTime gameTime)
@@ -38,15 +48,6 @@ class FastItem : SpriteGameObject
             Visible = false;
             ExtendedGame.AssetManager.PlaySoundEffect("Sounds/snd_watercollected");
             pickUp = true;
-        }
-
-        if (pickUp)
-        {
-            level.Player.walkingSpeed = 600;
-            if (elapsedTime > duration)
-            {
-                pickUp = false;
-            }
         }
     }
 
