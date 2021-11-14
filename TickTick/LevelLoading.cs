@@ -261,14 +261,15 @@ partial class Level : GameObjectList
             targetPosition = new Vector2(0, BoundingBox.Size.Y - camera.CameraViewPortSize.Y / zoomHeight);
         }
 
-        float durationScale = Vector2.Distance(startingPosition, targetPosition);
-        camera.Animation.AddZoomAnimation(0.005F * durationScale, camera.Zoom, camera.Zoom);
-        camera.Animation.AddZoomAnimation(0.002F * durationScale, camera.Zoom, 1);
+        float durationScale1 = Vector2.Distance(startingPosition, targetPosition);
+        float durationScale2 = MathF.Abs((BoundingBox.X * BoundingBox.Y) / (camera.CameraViewPortSize.X * camera.CameraViewPortSize.Y) - 1);
+        camera.Animation.AddZoomAnimation(0.005F * durationScale1, camera.Zoom, camera.Zoom);
+        camera.Animation.AddZoomAnimation(0.002F * durationScale2, camera.Zoom, 1);
         Vector2 playerPositionClamped = Extensions.PositionClampedToRectangle(camera.CenteredCameraPosition(Player.GlobalPosition), camera.CameraLimits);
-        camera.Animation.AddMoveAnimation(0.005F * durationScale, startingPosition, targetPosition);
-        camera.Animation.AddMoveAnimation(0.002F * durationScale, targetPosition, playerPositionClamped);
+        camera.Animation.AddMoveAnimation(0.005F * durationScale1, startingPosition, targetPosition);
+        camera.Animation.AddMoveAnimation(0.002F * durationScale2, targetPosition, playerPositionClamped);
 
-        new TimedAction(0.007F * durationScale, () => { ExtendedGame.Paused = false; camera.IsFollowing = true; });
+        new TimedAction(0.005F * durationScale1 + 0.002F * durationScale2, () => { ExtendedGame.Paused = false; camera.IsFollowing = true; });
     }
 
     Vector2 GetCellBottomCenter(int x, int y)
