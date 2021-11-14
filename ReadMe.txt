@@ -23,7 +23,7 @@ CHANGES
 		- Created an Item class, which is similar to the Waterdrop class.
 		- (NEEDS TESTING) When the player picks up an item, they either move at 0.5x OR 2x normal speed, for a duration of 5 seconds.
 
-s
+
 TODO
 -----------------------------------------------------------------------------
 - Sidescrolling

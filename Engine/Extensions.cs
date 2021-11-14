@@ -77,4 +77,24 @@ public static class Extensions
         }
         return false;
     }
+
+    //lerps from float a to float b by x = 0 to 1
+    public static float Lerp(float a, float b, float x)
+    {
+        return a * (1 - x) + b * x;
+    }
+
+    //lerps from vector a to vector b by x = 0 to 1
+    public static Vector2 Lerp(Vector2 a, Vector2 b, float x)
+    {
+        return a * (1 - x) + b * x;
+    }
+
+    public static Vector2 PositionClampedToRectangle(Vector2 position, Rectangle rectangle)
+    {
+        return new Vector2(
+            Math.Clamp(position.X, rectangle.Left, rectangle.Right),
+            Math.Clamp(position.Y, rectangle.Top, rectangle.Bottom)
+            );
+    }
 }
