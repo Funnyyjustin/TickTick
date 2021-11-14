@@ -19,7 +19,8 @@ namespace Engine
         public override void Update(GameTime gameTime){
             foreach (KeyValuePair<SpriteGameObject, float> keyValuePair in depthDictionary)
             {
-                keyValuePair.Key.velocity = perspectiveObject.velocity * new Vector2(keyValuePair.Value, 0);
+                Vector2 velocity = perspectiveObject.velocity * keyValuePair.Value;
+                keyValuePair.Key.velocity = new Vector2(velocity.X, 0);
                 keyValuePair.Key.Update(gameTime);
             }
         }

@@ -45,7 +45,7 @@ namespace Engine
 
             Vector2 previousPosition = LocalPosition;
             base.Update(gameTime);
-            if (previousPosition == LocalPosition) { velocity = Vector2.Zero; }
+            if (previousPosition.X == LocalPosition.X) { velocity = new Vector2(0, velocity.Y); }
         }
 
         //Gets or overwrites the LocalPosition property, so it sets the LocalPosition clamped to the CameraLimits Rectangle. Also updates the TranslationMatrix.
