@@ -54,10 +54,9 @@ class Rocket : AnimatedGameObject
         get
         {
             Rectangle bboxRocket = BoundingBox;
-            bboxRocket.X += 35;
-            bboxRocket.Y -= 15;
-            bboxRocket.Width -= 30;
-            bboxRocket.Height -= 1;
+            bboxRocket.X += 1;
+            bboxRocket.Width -= 2;
+            bboxRocket.Height = 1;
             return bboxRocket;
         }
     }
@@ -90,7 +89,7 @@ class Rocket : AnimatedGameObject
                 level.Player.Die();
 
             // if the player's boundingbox intersects with the rocket's boundingbox, the rocket dies
-            if (level.Player.CanCollideWithObjects && CollisionDetection.ShapesIntersect(BboxForCollisions, level.Player.BoundingBoxForCollisions))
+            else if (level.Player.CanCollideWithObjects && CollisionDetection.ShapesIntersect(BboxForCollisions, level.Player.BoundingBoxForCollisions))
                 RocketDie();
         }
     }
