@@ -139,9 +139,9 @@ partial class Level : GameObjectList
                 return new Tile(Tile.Type.Platform, Tile.SurfaceType.Slow);
             case 'L':
                 return new Tile(Tile.Type.Wall, Tile.SurfaceType.Slow);
-            case 'b':
+            case 'v':
                 return new Tile(Tile.Type.Platform, Tile.SurfaceType.Fast);
-            case 'B':
+            case 'V':
                 return new Tile(Tile.Type.Wall, Tile.SurfaceType.Fast);
             default:
                 return new Tile(Tile.Type.Empty, Tile.SurfaceType.Normal);
