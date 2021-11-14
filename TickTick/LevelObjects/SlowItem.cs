@@ -21,6 +21,7 @@ class SlowItem : SpriteGameObject
         Reset();
     }
 
+    // player walks twice as slow for five seconds
     public bool pickUp
     {
         get { return pickUp = true; }

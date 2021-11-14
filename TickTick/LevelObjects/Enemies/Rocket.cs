@@ -66,6 +66,7 @@ class Rocket : AnimatedGameObject
 
     public void RocketDie()
     {
+        // rocket gets removed from the game
         IsActive = false;
         collision = false;
         velocity.X = 0;
@@ -89,6 +90,8 @@ class Rocket : AnimatedGameObject
             if (level.Player.CanCollideWithObjects && HasPixelPreciseCollision(level.Player))
                 level.Player.Die();
         }
+
+        // if the player's boundingbox intersects with the rocket's boundingbox, the rocket dies
         if (level.Player.CanCollideWithObjects && CollisionDetection.ShapesIntersect(BboxForCollisions, level.Player.BoundingBoxForCollisions))
             RocketDie();
     }

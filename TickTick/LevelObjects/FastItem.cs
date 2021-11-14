@@ -21,6 +21,7 @@ class FastItem : SpriteGameObject
         Reset();
     }
 
+    // player walks twice as fast for five seconds
     public bool pickUp
     {
         get { return pickUp = true; }

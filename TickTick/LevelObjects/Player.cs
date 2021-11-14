@@ -5,8 +5,8 @@ using System;
 
 class Player : AnimatedGameObject
 {
-    public float walkingSpeed = 400; // Standard walking speed, in game units per second.
-    public float normalWalkingSpeed = 400;
+    public float walkingSpeed = 400; // The speed at which the character is currently walking.
+    public float normalWalkingSpeed = 400; // Variable which stores the normal walking speed.
     const float jumpSpeed = 900; // Lift-off speed when the character jumps.
     const float gravity = 2300; // Strength of the gravity force that pulls the character down.
     const float maxFallSpeed = 1200; // The maximum vertical speed at which the character can fall.
@@ -28,7 +28,7 @@ class Player : AnimatedGameObject
     
     bool isCelebrating; // Whether or not the player is celebrating a level victory.
     bool isExploding;
-    bool onCharacter;
+    bool onCharacter; // Whether or not the mouse is currently on the boundingbox of the character.
 
     public bool IsAlive { get; private set; }
 
@@ -101,13 +101,16 @@ class Player : AnimatedGameObject
                 PlayAnimation("idle");
         }
 
+        // gets the players boundingbox
         Rectangle playerBox = BoundingBoxForCollisions;
 
+        // checks if the players boundingbox contains the mouse cursor
         if (playerBox.Contains(inputHelper.MousePositionWorld))
             onCharacter = true;
         else
             onCharacter = false;
 
+        // checks if the player clicked on the characters boundingbox
         if (inputHelper.MouseLeftButtonPressed() && inputHelper.MouseLeftButtonDown() && onCharacter)
             EasterEgg();
 
@@ -175,8 +178,10 @@ class Player : AnimatedGameObject
             else
                 level.Timer.Multiplier = 1;
 
+            // walking speed becomes two times smaller if the player walks on a slow tile or picks up a slow item
             if (standingOnSlowTile || ((slowItem != null) && slowItem.pickUp))
                 walkingSpeed = normalWalkingSpeed / 2;
+            // walking speed becomes two times bigger if the player walks on a fast tile or picks up a fast item
             else if (standingOnFastTile || ((fastItem != null) && fastItem.pickUp))
                 walkingSpeed = normalWalkingSpeed * 2;
         }
@@ -267,7 +272,7 @@ class Player : AnimatedGameObject
                         velocity.Y = 0;
                         localPosition.Y = tileBounds.Top;
 
-                        // check the surface type: are we standing on a hot tile or an ice tile?
+                        // check the surface type: are we standing on a hot tile, an ice tile, a fast tile or a slow tile?
                         Tile.SurfaceType surface = level.GetSurfaceType(x, y);
                         if (surface == Tile.SurfaceType.Hot)
                             standingOnHotTile = true;
