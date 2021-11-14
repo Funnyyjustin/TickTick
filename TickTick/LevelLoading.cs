@@ -1,5 +1,6 @@
 ﻿using Engine;
 using Microsoft.Xna.Framework;
+using System;
 using System.Collections.Generic;
 using System.IO;
 
@@ -12,6 +13,11 @@ partial class Level : GameObjectList
 
         // read the description
         string description = reader.ReadLine();
+
+        //read the time the player has to reach the goal and add the timer
+        int levelTime = int.Parse(reader.ReadLine());
+        timer = new BombTimer(levelTime);
+        AddChild(timer);
 
         // read the rows of the grid; keep track of the longest row
         int gridWidth = 0;
@@ -29,7 +35,7 @@ partial class Level : GameObjectList
 
         // stop reading the file
         reader.Close();
-        
+
         // create all game objects for the grid
         AddPlayingField(gridRows, gridWidth, gridRows.Count);
 
@@ -154,7 +160,7 @@ partial class Level : GameObjectList
         // create the exit object
         goal = new SpriteGameObject("Sprites/LevelObjects/spr_goal", TickTick.Depth_LevelObjects);
         // make sure it's standing exactly on the tile below
-        goal.LocalPosition = GetCellPosition(x, y+1);
+        goal.LocalPosition = GetCellPosition(x, y + 1);
         goal.Origin = new Vector2(0, goal.Height);
         AddChild(goal);
     }
@@ -224,11 +230,45 @@ partial class Level : GameObjectList
         slowItems.Add(s);
     }
 
-    void LoadCamera(){
+    void LoadCamera()
+    {
         // initializes a camera that can move around the level, and set the camera position the player's position.
-        Camera followingCamera = new FollowingCamera(new Point(1440, 825), BoundingBox, Player, Vector2.Zero);
-        followingCamera.Reset();
-        TickTick.Game.Camera = followingCamera;
+        Point cameraViewPort = new Point(1440, 825);
+        Point cameraLimitsSize = BoundingBox.Size - cameraViewPort;
+        Rectangle cameraLimits = new Rectangle(Point.Zero, cameraLimitsSize);
+        TickTick.Game.Camera = new Camera(cameraViewPort, cameraLimits, TickTick.Game.GraphicsDevice, Player, false, 1.2F);
+        ShowLevelCameraAnimation();
+    }
+
+    void ShowLevelCameraAnimation()
+    {
+        ExtendedGame.Paused = true;
+        Camera camera = TickTick.Game.Camera;
+
+        float zoomWidth = 1.0F * camera.CameraViewPortSize.X / BoundingBox.Width;
+        float zoomHeight = 1.0F * camera.CameraViewPortSize.Y / BoundingBox.Height;
+        Vector2 startingPosition, targetPosition;
+        if (zoomWidth < zoomHeight)
+        {
+            camera.Zoom = zoomHeight;
+            startingPosition = new Vector2(BoundingBox.Size.X - camera.CameraViewPortSize.X / zoomHeight, 0);
+            targetPosition = Vector2.Zero;
+        }
+        else
+        {
+            camera.Zoom = zoomWidth;
+            startingPosition = Vector2.Zero;
+            targetPosition = new Vector2(0, BoundingBox.Size.Y - camera.CameraViewPortSize.Y / zoomHeight);
+        }
+
+        float durationScale = Vector2.Distance(startingPosition, targetPosition);
+        camera.Animation.AddZoomAnimation(0.05F * durationScale, camera.Zoom, camera.Zoom);
+        camera.Animation.AddZoomAnimation(0.02F * durationScale, camera.Zoom, 1);
+        Vector2 playerPositionClamped = Extensions.PositionClampedToRectangle(camera.CenteredCameraPosition(Player.GlobalPosition), camera.CameraLimits);
+        camera.Animation.AddMoveAnimation(0.05F * durationScale, startingPosition, targetPosition);
+        camera.Animation.AddMoveAnimation(0.02F * durationScale, targetPosition, playerPositionClamped);
+
+        new TimedAction(0.07F * durationScale, () => { ExtendedGame.Paused = false; camera.IsFollowing = true; });
     }
 
     Vector2 GetCellBottomCenter(int x, int y)

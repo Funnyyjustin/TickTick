@@ -39,22 +39,21 @@ partial class Level : GameObjectList
         // initialize camera
         LoadCamera();
 
-        // add the timer
-        timer = new BombTimer();
-        AddChild(timer);
 
+        Parallax parallax = new Parallax(TickTick.Game.Camera);
         // add mountains in the background
         for (int i = 0; i < 4; i++)
         {
+            float depth = (float)ExtendedGame.Random.NextDouble();
             SpriteGameObject mountain = new SpriteGameObject(
                 "Sprites/Backgrounds/spr_mountain_" + (ExtendedGame.Random.Next(2) + 1),
-                TickTick.Depth_Background + 0.01f * (float)ExtendedGame.Random.NextDouble());
+                TickTick.Depth_Background + 0.01F * depth);
 
             mountain.LocalPosition = new Vector2(mountain.Width * (i - 1) * 0.4f,
                 BoundingBox.Height - mountain.Height);
-
-            backgrounds.AddChild(mountain);
+            parallax.AddObject(mountain, 0.35F * (1.2F - depth));
         }
+        backgrounds.AddChild(parallax);
 
         // add clouds
         for (int i = 0; i < 6; i++)

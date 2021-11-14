@@ -31,20 +31,14 @@ namespace Engine
             {
                 if (camera == null)
                 {
-                    return new Camera(WorldSize, Rectangle.Empty);
+                    return new Camera(WorldSize, Rectangle.Empty, GraphicsDevice);
                 }
                 return camera;
             }
-            set
-            {
-                camera = value;
-            }
+            set { camera = value; }
         }
 
-        /// <summary>
-        /// A matrix used for scaling the game world so that it fits inside the window.
-        /// </summary>
-        Matrix spriteScale;
+        public static bool Paused { get; set; } = false;
 
         /// <summary>
         /// An object for generating random numbers throughout the game.
@@ -106,9 +100,10 @@ namespace Engine
         protected override void Update(GameTime gameTime)
         {
             HandleInput();
+            TimedActionManager.Update(gameTime);
             Camera.Update(gameTime);
             FullScreen = FullScreen;
-            GameStateManager.Update(gameTime);
+            if (!Paused) GameStateManager.Update(gameTime);
         }
 
         /// <summary>
@@ -137,17 +132,18 @@ namespace Engine
         {
             GraphicsDevice.Clear(Color.Black);
 
-            // calculate how the graphics should be scaled, so that the game world fits inside the window
-            spriteScale = Matrix.CreateScale((float)GraphicsDevice.Viewport.Width / Camera.CameraViewPortSize.X, (float)GraphicsDevice.Viewport.Height / Camera.CameraViewPortSize.Y, 1);
             // start drawing sprites, applying the scaling and translation matrix
-            Matrix transform = Camera.TranslationMatrix * spriteScale;
+            Matrix transform = Camera.TranslationMatrix * Camera.ScalingMatrix;
             spriteBatch.Begin(SpriteSortMode.FrontToBack, null, null, null, null, null, transform);
             spriteBatch.Name = "Default";
             // let the game world draw itself
             GameStateManager.Draw(gameTime, spriteBatch);
             spriteBatch.End();
 
-            spriteBatch.Begin(SpriteSortMode.FrontToBack, null, null, null, null, null, spriteScale);
+            spriteBatch.Begin(SpriteSortMode.FrontToBack, null, null, null, null, null, Matrix.CreateScale(
+                    (float)GraphicsDevice.Viewport.Width / Camera.CameraViewPortSize.X,
+                    (float)GraphicsDevice.Viewport.Height / Camera.CameraViewPortSize.Y, 1
+                    ));
             spriteBatch.Name = "UI";
             // let the UI draw itself
             GameStateManager.Draw(gameTime, spriteBatch);

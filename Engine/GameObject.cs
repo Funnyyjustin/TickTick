@@ -18,7 +18,7 @@ namespace Engine
         /// <summary>
         /// The current velocity of this game object, in units per second.
         /// </summary>
-        protected Vector2 velocity;
+        public Vector2 velocity;
 
         /// <summary>
         /// Whether or not this game object is currently visible.
