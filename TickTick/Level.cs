@@ -25,24 +25,28 @@ partial class Level : GameObjectList
     {
         LevelIndex = levelIndex;
 
-        // load the background
-        GameObjectList backgrounds = new GameObjectList();
-        SpriteGameObject backgroundSky = new SpriteGameObject("Sprites/Backgrounds/spr_sky", TickTick.Depth_Background);
-        backgroundSky.LocalPosition = new Vector2(0, 825 - backgroundSky.Height);
-        backgrounds.AddChild(backgroundSky);
-
-        AddChild(backgrounds);
-
         // load the rest of the level
         LoadLevelFromFile(filename);
 
         // initialize camera
         LoadCamera();
 
+        // load the background
+        GameObjectList backgrounds = new GameObjectList();
+        float scale = 1 + MathF.Max(
+            1.0F * TickTick.Game.Camera.CameraViewPortSize.X / BoundingBox.Width,
+            1.0F * TickTick.Game.Camera.CameraViewPortSize.Y / BoundingBox.Height
+            );
+        SpriteGameObject backgroundSky = new SpriteGameObject("Sprites/Backgrounds/spr_sky", TickTick.Depth_Background, scale: scale);
+        backgroundSky.LocalPosition = new Vector2(0, 825 - backgroundSky.Height);
+        backgrounds.AddChild(backgroundSky);
+
+        AddChild(backgrounds);
 
         Parallax parallax = new Parallax(TickTick.Game.Camera);
         // add mountains in the background
-        for (int i = 0; i < 4; i++)
+        int amount = (tiles.GetLength(0) / 5);
+        for (int i = 0; i < amount; i++)
         {
             float depth = (float)ExtendedGame.Random.NextDouble();
             SpriteGameObject mountain = new SpriteGameObject(

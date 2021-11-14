@@ -36,14 +36,21 @@ namespace Engine
         protected float depth;
 
         /// <summary>
+        /// The scale this object should be drawn with. 
+        /// A larger value means that the object will be shown bigger.
+        /// </summary>
+        protected float scale;
+
+        /// <summary>
         /// Creates a new SpriteGameObject with a given sprite name.
         /// </summary>
         /// <param name="spriteName">The name of the sprite to load.</param>
         /// <param name="depth">The depth at which the object should be drawn.</param>
         /// <param name="sheetIndex">The sheet index of the sprite to use initially.</param>
-        public SpriteGameObject(string spriteName, float depth, string drawBatch = "Default", int sheetIndex = 0)
+        public SpriteGameObject(string spriteName, float depth, string drawBatch = "Default", int sheetIndex = 0, float scale = 1)
         {
             this.depth = depth;
+            this.scale = scale;
             DrawBatch = drawBatch;
 
             if (spriteName != null)
@@ -67,7 +74,7 @@ namespace Engine
 
             // draw the sprite at its *global* position in the game world
             if (sprite != null)
-                sprite.Draw(spriteBatch, GlobalPosition, Origin);
+                sprite.Draw(spriteBatch, GlobalPosition, Origin, scale);
         }
 
         /// <summary>

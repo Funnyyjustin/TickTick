@@ -71,7 +71,7 @@ namespace Engine
         /// <param name="spriteBatch">The SpriteBatch object used for drawing sprites.</param>
         /// <param name="position">A position in the game world.</param>
         /// <param name="origin">An origin that should be subtracted from the drawing position.</param>
-        public void Draw(SpriteBatch spriteBatch, Vector2 position, Vector2 origin)
+        public void Draw(SpriteBatch spriteBatch, Vector2 position, Vector2 origin, float scale)
         {
             // mirror the sprite?
             SpriteEffects spriteEffects = SpriteEffects.None;
@@ -79,7 +79,7 @@ namespace Engine
                 spriteEffects = SpriteEffects.FlipHorizontally;
 
             spriteBatch.Draw(sprite, position, spriteRectangle, Color.White,
-                0.0f, origin, 1.0f, spriteEffects, depth);
+                0.0f, origin, scale, spriteEffects, depth);
         }
 
         /// <summary>
