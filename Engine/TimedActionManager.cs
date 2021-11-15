@@ -5,6 +5,7 @@ using System.Text;
 
 namespace Engine
 {
+    //Handle all Timed Actions that have been created.
     public static class TimedActionManager
     {
         public static List<TimedAction> timedActions = new List<TimedAction>();

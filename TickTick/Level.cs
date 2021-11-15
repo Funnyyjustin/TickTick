@@ -31,7 +31,7 @@ partial class Level : GameObjectList
         // initialize camera
         LoadCamera();
 
-        // load the background
+        // load the background and scale it so it fills the entire level size.
         GameObjectList backgrounds = new GameObjectList();
         float scale = 1 + MathF.Max(
             1.0F * TickTick.Game.Camera.CameraViewPortSize.X / BoundingBox.Width,
@@ -44,7 +44,7 @@ partial class Level : GameObjectList
         AddChild(backgrounds);
 
         Parallax parallax = new Parallax(TickTick.Game.Camera);
-        // add mountains in the background
+        // add mountains in the background and add them to the parallax object, to give the illusion of depth.
         int amount = (tiles.GetLength(0) / 5);
         for (int i = 0; i < amount; i++)
         {

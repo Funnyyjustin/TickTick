@@ -232,7 +232,7 @@ partial class Level : GameObjectList
 
     void LoadCamera()
     {
-        // initializes a camera that can move around the level, and set the camera position the player's position.
+        // initializes a camera that can move around the level, and start animating it, so it shows the level.
         Point cameraViewPort = new Point(1440, 825);
         Point cameraLimitsSize = BoundingBox.Size - cameraViewPort;
         Rectangle cameraLimits = new Rectangle(Point.Zero, cameraLimitsSize);
@@ -242,9 +242,14 @@ partial class Level : GameObjectList
 
     void ShowLevelCameraAnimation()
     {
+        //Pause the game, because we dont want the game to start while we are still showing the level.
         ExtendedGame.Paused = true;
+
         Camera camera = TickTick.Game.Camera;
 
+        //calculate the startingposition, targetposition and zoom for the camera, depending on how big the level is
+        //(the camera starts zoomed out as much as possible, so it does not show anything outside of the level.
+        //In other words, the camera zooms out until one of the camera viewport edges hit the edges of the level).
         float zoomWidth = 1.0F * camera.CameraViewPortSize.X / BoundingBox.Width;
         float zoomHeight = 1.0F * camera.CameraViewPortSize.Y / BoundingBox.Height;
         Vector2 startingPosition, targetPosition;
@@ -261,14 +266,18 @@ partial class Level : GameObjectList
             targetPosition = new Vector2(0, BoundingBox.Size.Y - camera.CameraViewPortSize.Y / zoomHeight);
         }
 
+        //calculate the scalar for the duration of the animations, so the speed at which the camera moves is independent from the level size and level ratio.
         float durationScale1 = Vector2.Distance(startingPosition, targetPosition);
         float durationScale2 = MathF.Abs((BoundingBox.X * BoundingBox.Y) / (camera.CameraViewPortSize.X * camera.CameraViewPortSize.Y) - 1);
+
+        //Scroll through the level, and then zoom in to the player.
         camera.Animation.AddZoomAnimation(0.005F * durationScale1, camera.Zoom, camera.Zoom);
         camera.Animation.AddZoomAnimation(0.5F * durationScale2, camera.Zoom, 1);
         Vector2 playerPositionClamped = Extensions.PositionClampedToRectangle(camera.CenteredCameraPosition(Player.GlobalPosition), camera.CameraLimits);
         camera.Animation.AddMoveAnimation(0.005F * durationScale1, startingPosition, targetPosition);
         camera.Animation.AddMoveAnimation(0.5F * durationScale2, targetPosition, playerPositionClamped);
 
+        //After the animation is done, start the game and make the camera follow the player.
         new TimedAction(0.005F * durationScale1 + 0.5F * durationScale2, () => { ExtendedGame.Paused = false; camera.IsFollowing = true; });
     }
 

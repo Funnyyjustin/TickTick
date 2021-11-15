@@ -41,8 +41,11 @@ namespace Engine
                 Vector2 deltaPosition = target.GlobalPosition - cameraCenter;
                 velocity = deltaPosition.Normalized() * velocityMultiplier;
             }
+
+            //Update the animation object
             Animation.Update(gameTime);
 
+            //if the X position did not change, set the X velocity to zero. This is used for the parallax effect.
             Vector2 previousPosition = LocalPosition;
             base.Update(gameTime);
             if (previousPosition.X == LocalPosition.X) { velocity = new Vector2(0, velocity.Y); }

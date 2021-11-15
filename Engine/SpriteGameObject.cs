@@ -46,7 +46,9 @@ namespace Engine
         /// </summary>
         /// <param name="spriteName">The name of the sprite to load.</param>
         /// <param name="depth">The depth at which the object should be drawn.</param>
+        /// <param name="drawBatch">The name of the spritebatch this sprite should be drawn in.</param>
         /// <param name="sheetIndex">The sheet index of the sprite to use initially.</param>
+        /// <param name="scale">The scaling of the sprite.</param>
         public SpriteGameObject(string spriteName, float depth, string drawBatch = "Default", int sheetIndex = 0, float scale = 1)
         {
             this.depth = depth;

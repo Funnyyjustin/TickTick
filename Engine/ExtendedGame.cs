@@ -24,6 +24,7 @@ namespace Engine
         /// </summary>
         protected Point windowSize;
 
+        //Get the camera of return a default camera if is not set.
         private Camera camera;
         public Camera Camera
         {
@@ -140,6 +141,7 @@ namespace Engine
             GameStateManager.Draw(gameTime, spriteBatch);
             spriteBatch.End();
 
+            // start drawing sprites, applying a scaling matrix for the UI
             spriteBatch.Begin(SpriteSortMode.FrontToBack, null, null, null, null, null, Matrix.CreateScale(
                     (float)GraphicsDevice.Viewport.Width / Camera.CameraViewPortSize.X,
                     (float)GraphicsDevice.Viewport.Height / Camera.CameraViewPortSize.Y, 1

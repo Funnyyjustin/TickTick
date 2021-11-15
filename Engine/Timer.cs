@@ -4,6 +4,7 @@ using System.Text;
 
 namespace Engine
 {
+    //Create a Timer that gives information about whether a certain amount of time has passed.
     public class Timer
     {
         public float Duration { get; set; }

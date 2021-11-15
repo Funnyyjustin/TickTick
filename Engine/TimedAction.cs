@@ -5,6 +5,7 @@ using System.Text;
 
 namespace Engine
 {
+    //Invokes an action after a set amount of time. The TimedAction is handled automatically by the TimedActionManager.
     public class TimedAction : Timer
     {
         private Action timedAction;

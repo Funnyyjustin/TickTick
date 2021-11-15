@@ -9,6 +9,7 @@ namespace Engine
     {
         Camera camera;
 
+        //Queues that store the Zoom and Move animation objects
         Queue<Zoom> targetZoomValues = new Queue<Zoom>();
         Queue<Move> targetMoveValues = new Queue<Move>();
 
@@ -23,12 +24,14 @@ namespace Engine
             HandleMove(deltaTime);
         }
 
+        //queue a zoom animation for this camera
         public void AddZoomAnimation(float duration, float startZoom, float targetZoom)
         {
             if (duration == 0) return;
             targetZoomValues.Enqueue(new Zoom(duration, startZoom, targetZoom));
         }
 
+        //if there is a zoom animation, go to the next animation step
         public void HandleZoom(float deltaTime){
             if (targetZoomValues.Count == 0) return;
             Zoom currentZoomAnimation = targetZoomValues.Peek();
@@ -37,12 +40,14 @@ namespace Engine
             camera.Zoom = currentZoomAnimation.GetCurrentZoom();
         }
 
+        //queue a move animation for this camera
         public void AddMoveAnimation(float duration, Vector2 startMove, Vector2 targetMove)
         {
             if (duration == 0) return;
             targetMoveValues.Enqueue(new Move(duration, startMove, targetMove));
         }
 
+        //if there is a move animation, go to the next animation step
         public void HandleMove(float deltaTime)
         {
             if (targetMoveValues.Count == 0) return;
@@ -66,6 +71,7 @@ namespace Engine
 
             public float GetCurrentZoom()
             {
+                //calculate the interpolation between StartZoom and TargetZoom, depending on the time that has passed since the start of this animation.
                 return Extensions.Lerp(StartZoom, TargetZoom, TimePassed / Duration);
             }
         }
@@ -85,6 +91,7 @@ namespace Engine
 
             public Vector2 GetCurrentMove()
             {
+                //calculate the interpolation between StartMove and TargetMove, depending on the time that has passed since the start of this animation.
                 return Extensions.Lerp(StartMove, TargetMove, TimePassed / Duration);
             }
         }

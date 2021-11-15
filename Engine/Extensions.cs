@@ -90,6 +90,7 @@ public static class Extensions
         return a * (1 - x) + b * x;
     }
 
+    //returns a point, but if it is outside of a certain rectangle, return the point clamped to the rectangle.
     public static Vector2 PositionClampedToRectangle(Vector2 position, Rectangle rectangle)
     {
         return new Vector2(
